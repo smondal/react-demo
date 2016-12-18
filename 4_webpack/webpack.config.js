@@ -2,8 +2,9 @@ module.exports = {
     context: __dirname + "/src",
     entry: "./index",
     output: {
-        path: __dirname + "/dist",
-        filename: "bundle.js"
+        path: __dirname,
+        filename: "bundle.js",
+        publicPath: "/static/"
     },
     module: {
     loaders: [

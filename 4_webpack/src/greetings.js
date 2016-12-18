@@ -1,6 +1,6 @@
 var Util = {
   sayhello: function(){
-    document.write("It works.");
+    document.write("It works. in the sandip ggSS");
   },
   saybye: function(){
     console.log("Bye")
