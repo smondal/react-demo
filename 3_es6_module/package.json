@@ -1,0 +1,14 @@
+{
+  "name": "3_webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "babel-node --presets es2015 src/index.js",
+    "build": "babel src --out-dir dist",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
