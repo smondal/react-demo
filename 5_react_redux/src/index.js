@@ -1,57 +1,85 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
+import deepFreeze from 'deep-freeze'
+import expect from 'expect'
 
-const counter = (state= 5, action) => {
+
+const todos = (state= [], action) => {
   switch(action.type){
-    case "INCREMENT":
-      return state + 1;
-    case "DECREMENT":
-      return state - 1;
+    case "ADD_TODO":
+      return [ ...state, {
+        id: action.id,
+        text:action.text,
+        completed: false
+      }]
+    case 'TOGGGLE_TODO':
+      return state.map(todo => {
+        if(todo.id !== action.id){
+          return todo;
+        }
+        return Object.assign({}, todo, { completed: !todo.completed})
+      })
     default:
       return state;
   }
 }
 
-const store = createStore(counter);
-
-class Counter extends React.Component {
-  constructor(props) {
-    super(props);
+const visibilityFilter = (state = "SHOW_ALL", action) =>{
+  switch(action.type){
+    case "SET_VISIBILITY_FILTER":
+      return action.filter;
+    default: 
+      return state
   }
+}
 
-  onIncrement(){
-    store.dispatch({type: "INCREMENT"})
-  }
+const todoCombineReducer = combineReducers({
+  todos, visibilityFilter
+})
 
-  onDecrement(){
-    store.dispatch({type: "DECREMENT"})
+
+let nextTodoId = 0;
+class TodoApp extends React.Component{
+
+  dispatchAddTodo(){
+    store.dispatch({
+      type: "ADD_TODO",
+      text: this.refs.add_todo.value,
+      id: nextTodoId++
+    })
   }
 
   render() {
     return(
       <div>
-        <h1>Hello {this.props.value} World</h1>
-        <button onClick={this.onIncrement.bind(this)}> + </button>
-        <button onClick={this.onDecrement.bind(this)}> - </button> 
+        <input type="text" ref="add_todo" />
+        <button onClick={this.dispatchAddTodo.bind(this)}>Add </button>
+        <ul>
+          {this.props.todos.map(todo =>
+            <li key={todo.id} onClick={() => {
+              store.dispatch({
+                type: "TOGGGLE_TODO",
+                id: todo.id
+              })
+            }}
+            style = {{
+              textDecoration: todo.completed ? 'line-through' : 'none'
+            }}
+            >
+              {todo.text}
+            </li>
+            )}
+        </ul>
       </div>
     )
   }
 }
 
-const render = () => { ReactDOM.render(<Counter value={store.getState()}
-  // onIncrement= { () => {
-  //   console.log(store.getState())
-  //   store.dispatch({type: "INCREMENT"})
-  //   }
-  // }
-  // onDecrement = {() => 
-  //   store.dispatch({type: "DECREMENT"})
-  //  }
-  />, document.getElementById("main")
+const store = createStore(todoCombineReducer)
+
+const render = () => { ReactDOM.render(<TodoApp todos={store.getState().todos} />, document.getElementById("main")
   )}
 render();
 store.subscribe(render) 
-
-
 
