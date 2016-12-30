@@ -3,15 +3,15 @@
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'run',
 1 verbose cli   'dev' ]
-2 info using npm@2.14.12
-3 info using node@v4.2.4
+2 info using npm@3.3.6
+3 info using node@v5.0.0
 4 verbose stack Error: ENOENT: no such file or directory, open 'C:\Sandip\share\work\react\package.json'
 4 verbose stack     at Error (native)
 5 verbose cwd C:\Sandip\share\work\react
 6 error Windows_NT 6.1.7601
 7 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
-8 error node v4.2.4
-9 error npm  v2.14.12
+8 error node v5.0.0
+9 error npm  v3.3.6
 10 error path C:\Sandip\share\work\react\package.json
 11 error code ENOENT
 12 error errno -4058

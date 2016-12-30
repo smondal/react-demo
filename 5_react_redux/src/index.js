@@ -38,6 +38,35 @@ const todoCombineReducer = combineReducers({
   todos, visibilityFilter
 })
 
+const FilterLink = ({
+  filter,
+  children
+}) => {
+  return (
+    <a href="#"
+      onClick={e => {e.preventDefault();
+        store.dispatch({
+          type: "SET_VISIBILITY_FILTER",
+          filter
+        })
+      }}
+      >
+      {children}
+      </a>
+  )
+}
+
+const getVisibiltyTodos = (todos, filter) =>{
+  switch(filter){
+    case "SHOW_ALL" :
+      return todos
+    case "SHOW_COMPLETED" :
+      return todos.filter(t => t.completed)
+    case "SHOW_ACTIVE" :
+      return todos.filter(t => !t.completed)
+  }
+}
+
 
 let nextTodoId = 0;
 class TodoApp extends React.Component{
@@ -51,12 +80,14 @@ class TodoApp extends React.Component{
   }
 
   render() {
+    const visibleTodos = getVisibiltyTodos(this.props.todos, this.props.visibilityFilter)
     return(
       <div>
+        
         <input type="text" ref="add_todo" />
         <button onClick={this.dispatchAddTodo.bind(this)}>Add </button>
         <ul>
-          {this.props.todos.map(todo =>
+          {visibleTodos.map(todo =>
             <li key={todo.id} onClick={() => {
               store.dispatch({
                 type: "TOGGGLE_TODO",
@@ -71,6 +102,12 @@ class TodoApp extends React.Component{
             </li>
             )}
         </ul>
+        <p>
+          Show: 
+          <FilterLink filter="SHOW_ALL"> All</FilterLink>
+          <FilterLink filter="SHOW_ACTIVE"> Active </FilterLink>
+          <FilterLink filter="SHOW_COMPLETED"> Complete</FilterLink>
+        </p>
       </div>
     )
   }
@@ -78,7 +115,7 @@ class TodoApp extends React.Component{
 
 const store = createStore(todoCombineReducer)
 
-const render = () => { ReactDOM.render(<TodoApp todos={store.getState().todos} />, document.getElementById("main")
+const render = () => { ReactDOM.render(<TodoApp {...store.getState()} />, document.getElementById("main")
   )}
 render();
 store.subscribe(render) 
